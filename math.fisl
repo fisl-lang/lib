@@ -1,0 +1,32 @@
+
+#wants flow
+#wants stack
+
+
+label math::multiply
+label math::mul
+    call stack::swap
+    pull factor-count
+    call stack::swap
+    pull factor-addend
+
+    let product be 0
+
+    push 0
+    call stack::swap
+        if factor-count equal 0 goto flow::return
+    call stack::swap
+    call stack::drop
+
+    label math::mul::loop
+        let product be product plus factor-addend
+        let factor-count be factor-count minus 1
+    if factor-count greater 0 goto math::mul::loop
+
+    push product
+    return
+
+
+
+
+
