@@ -1,4 +1,5 @@
 
+#stack manipulation utilities
 
 label stack::swap
     pull address
@@ -21,4 +22,11 @@ label stack::dup
 
     push address
     return
+
+lab stack::drop
+    pull address
+
+    pull a
     
+    push address
+    return
