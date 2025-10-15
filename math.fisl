@@ -24,6 +24,7 @@ label math::mul
     if factor-count greater 0 goto math::mul::loop
 
     push product
+    call stack::swap
     return
 
 
