@@ -23,7 +23,7 @@ label stack::dup
     push address
     return
 
-lab stack::drop
+label stack::drop
     pull address
 
     pull a
