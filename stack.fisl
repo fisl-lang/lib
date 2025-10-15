@@ -4,10 +4,10 @@
 label stack::swap
     pull address
 
-    pull a
-    pull b
-    push a
-    push b
+    pull stack::a
+    pull stack::b
+    push stack::a
+    push stack::b
 
     push address
     return
@@ -16,9 +16,9 @@ label stack::swap
 label stack::dup
     pull address
 
-    pull a
-    push a
-    push a
+    pull stack::a
+    push stack::a
+    push stack::a
 
     push address
     return
@@ -26,7 +26,7 @@ label stack::dup
 label stack::drop
     pull address
 
-    pull a
+    pull stack::a
     
     push address
     return
