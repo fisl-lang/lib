@@ -1,0 +1,79 @@
+
+
+label heap::init
+    allocate 128 words for heap::base
+    return
+
+
+let walker be 0
+let needed be 0
+
+label heap::alloc::restart
+    #skip block
+    read size from walker
+    let walker be walker plus size
+
+    #restart trial
+    let trial be needed
+
+    return
+
+label heap::alloc::walk
+    let walker be walker plus 1
+    let trial  be trial minus 1
+    return
+
+label heap::alloc::done
+    let ptr be walker minus needed
+    write needed into ptr
+
+    let base be ptr plus 1
+    push base
+    call stack::swap
+    return
+
+
+#(Request) => (Chunk)
+label heap::alloc
+    call stack::swap 
+    pull request
+
+    let needed be request plus 1
+
+    # *collars and leashes you* let's go for walkies~
+    let walker be heap::base
+
+    let trial be needed
+    label heap::alloc::loop
+        if trial equal 0 goto heap::alloc::done
+
+        read must-restart from walker
+        if must-restart unequal 0 call heap::alloc::restart
+        if must-restart   equal 0 call heap::alloc::walk
+    goto heap::alloc::loop
+
+
+
+
+#(Chunk)
+label heap::free
+    call stack::swap
+    pull ptr
+
+    let start be ptr minus 1
+    read size from start
+    let end be start plus size
+    
+    label heap::free::loop
+        if start greater end goto flow::return
+
+        write 0 into start
+        let start be start plus 1
+
+    goto heap::free::loop
+
+    
+
+
+
+
