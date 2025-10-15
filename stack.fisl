@@ -1,6 +1,6 @@
 
 
-label swap
+label stack::swap
     pull address
 
     pull a
@@ -12,7 +12,7 @@ label swap
     return
 
 
-label dup
+label stack::dup
     pull address
 
     pull a
