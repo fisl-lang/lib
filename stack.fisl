@@ -1,0 +1,24 @@
+
+
+label swap
+    pull address
+
+    pull a
+    pull b
+    push a
+    push b
+
+    push address
+    return
+
+
+label dup
+    pull address
+
+    pull a
+    push a
+    push a
+
+    push address
+    return
+    
