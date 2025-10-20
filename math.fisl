@@ -1,6 +1,5 @@
-
-#wants flow
-#wants stack
+use flow
+use stack
 
 
 label math::multiply

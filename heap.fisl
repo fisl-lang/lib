@@ -1,6 +1,10 @@
 
+use stack
+use flow
 
+let heap::is-inited be 0
 label heap::init
+    let heap::is-inited be 1
     allocate 128 words for heap::base
     return
 
@@ -33,8 +37,10 @@ label heap::alloc::done
     return
 
 
-#(Request) => (Chunk)
+#(Request::Int) => (::Chunk)
 label heap::alloc
+    if heap::is-inited equal 0 call heap::init
+
     call stack::swap 
     pull request
 
@@ -55,7 +61,7 @@ label heap::alloc
 
 
 
-#(Chunk)
+#(::Chunk)
 label heap::free
     call stack::swap
     pull ptr
