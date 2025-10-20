@@ -28,4 +28,28 @@ label math::mul
 
 
 
+#(Numerator::Int, Denominator::Int) => (Quotient::Int)
+    let quotient be 0
+    label math::div::done
+        push quotient
+        call stack::swap
+        return
+label math::divide
+label math::div
+    call stack::swap
+    pull denominator
+    call stack::swap
+    pull numerator
+
+    let quotient be 0
+
+    label math::div::loop
+        if numerator lesser denominator goto math::div::done
+        let numerator be numerator minus denominator
+        let quotient be quotient plus 1
+    goto math::div::loop
+
+
+
+
 
