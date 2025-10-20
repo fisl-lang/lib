@@ -2,6 +2,13 @@ use flow
 use stack
 
 
+
+#(Factor-Addend::Int, Factor-Count::Int) => (Product::Int)
+    let product be 0
+    label math::mul::done
+        push product
+        call stack::swap
+        return
 label math::multiply
 label math::mul
     call stack::swap
@@ -11,20 +18,12 @@ label math::mul
 
     let product be 0
 
-    push 0
-    call stack::swap
-        if factor-count equal 0 goto flow::return
-    call stack::swap
-    call stack::drop
-
     label math::mul::loop
+        if factor-count equal 0 goto math::mul::done
         let product be product plus factor-addend
         let factor-count be factor-count minus 1
-    if factor-count greater 0 goto math::mul::loop
+    goto math::mul::loop
 
-    push product
-    call stack::swap
-    return
 
 
 
