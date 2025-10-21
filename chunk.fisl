@@ -1,5 +1,7 @@
 
+use stack
 use heap
+use mem
 
 
 # (::Chunk) => (Len::Int)
@@ -13,3 +15,28 @@ label chunk::len
     push len
     call stack::swap
     return
+
+
+# (X::Chunk) => (Y::Chunk)
+label chunk::copy
+    call stack::swap
+
+    call stack::dup
+    call chunk::len
+    call stack::dup
+    call heap::allocate
+    call stack::dup
+    pull new
+
+    call stack::swap
+    call mem::cpy
+
+    push new
+    call stack::swap
+    return
+
+
+
+
+
+    
