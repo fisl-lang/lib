@@ -60,7 +60,6 @@ label heap::alloc
 
 
 
-
 #(::Chunk)
 label heap::free
     call stack::swap
@@ -78,8 +77,19 @@ label heap::free
 
     goto heap::free::loop
 
-    
 
+
+# (::Chunk) => (Size::Int)
+label heap::size
+    call stack::swap
+    pull ptr
+
+    let ptr be ptr minus 1
+    read size from ptr
+
+    push size
+    call stack::swap
+    return
 
 
 
