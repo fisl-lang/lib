@@ -1,0 +1,48 @@
+
+use stack
+
+
+#(Src::Ptr, Dst::Ptr, Size::Int)
+label mem::cpy
+    call stack::swap
+    pull size
+    call stack::swap
+    pull dst
+    call stack::swap
+    pull src
+
+    let index be 0
+
+    label mem::cpy::loop
+        let size be size minus 1
+
+        read  data from src
+        write data into dst
+
+        let src be src plus 1
+        let dst be dst plus 1
+
+    if size greater 0 goto mem::cpy::loop
+
+    return
+
+
+#(Buffer::Ptr, Val::Int, Size::Int)
+label mem::set
+    call stack::swap
+    pull size
+    call stack::swap
+    pull val
+    call stack::swap
+    pull ptr
+
+    label mem::set::loop
+        let size be size minus 1
+
+        write val into ptr
+        let ptr be ptr plus 1
+    if size greater 0 goto mem::set::loop
+
+    return
+
+
