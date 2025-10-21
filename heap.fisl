@@ -38,6 +38,7 @@ label heap::alloc::done
 
 
 #(Request::Int) => (::Chunk)
+label heap::allocate
 label heap::alloc
     if heap::is-inited equal 0 call heap::init
 
