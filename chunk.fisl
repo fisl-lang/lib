@@ -1,0 +1,15 @@
+
+use heap
+
+
+# (::Chunk) => (Len::Int)
+label chunk::len
+    call stack::swap
+    pull ptr
+
+    let ptr be ptr minus 1
+    read len from ptr
+
+    push len
+    call stack::swap
+    return
