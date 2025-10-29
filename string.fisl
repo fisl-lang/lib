@@ -1,0 +1,16 @@
+
+use stack
+
+
+label string::print
+    call stack::swap    
+    pull ptr
+
+label string::print::loop
+    stream char from ptr
+    output char
+    if char unequal 0 goto string::print::loop
+
+    return
+
+
