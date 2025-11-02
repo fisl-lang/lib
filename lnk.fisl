@@ -1,0 +1,122 @@
+
+use stack
+use heap
+use math
+
+# link structure
+# p+0 -> Next::Ptr
+# p+1 -> Content::Void
+
+
+# => (::Lnk)
+label lnk::allocate
+    push 2
+    call heap::allocate
+    call stack::swap
+    return
+
+#(Content::Void) => (::Lnk)
+label lnk::create-data
+    call stack::swap
+    pull content
+
+    call lnk::allocate
+    call stack::dup
+    call math::inc
+    pull ptr-oo
+
+    write content into ptr-oo
+
+    call stack::swap
+    return
+
+
+    
+
+#(::Lnk)
+label lnk::deallocate
+    call stack::swap
+    call heap::free
+    return
+
+#(::Lnk) => (::Lnk)
+label lnk::next
+    call stack::swap
+    pull ptr
+    read next from ptr
+    push next
+    call stack::swap
+    return
+
+
+#(::Lnk) => (Content::Void)
+label lnk::get
+    call stack::swap
+    call math::inc
+        pull ptr-oo
+        read content from ptr-oo
+        push content
+    call stack::swap
+    return
+
+#(::Lnk, Content::Void)
+label lnk::set
+    call stack::swap
+        pull content
+    call stack::swap
+    call math::inc
+        pull ptr-oo
+
+        write content into ptr-oo
+    return
+
+
+
+    
+#(Link::Lnk, Last::Lnk)
+# before: Last -> Next
+#  after: Last -> Link -> Next
+label lnk::insert
+    call stack::swap
+    pull last
+    call stack::swap
+    pull link
+
+    #initial
+    read next from last
+
+    #relink
+    write link into last
+    write next into link
+
+    return
+
+
+#(Last::Pos) => (Content::Void)
+# before: Last -> Link -> Next
+#  after: Last -> Next
+label lnk::erase
+    call stack::swap
+    pull last
+
+    #initial
+    stream link from last
+    stream next from last
+
+    #relink
+    write next into last
+
+    #deallocate
+    push link
+    call lnk::deallocate
+
+    return
+
+
+
+
+
+    
+
+
+
