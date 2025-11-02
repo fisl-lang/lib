@@ -50,6 +50,21 @@ label math::div
     goto math::div::loop
 
 
+#(N::Int) => (N+1::Int)
+label math::inc
+    call stack::swap
+    pull n
+    let n be n plus 1
+    push n
+    call stack::swap
+    return
 
-
+#(N::Int) => (N-1::Int)
+label math::dec
+    call stack::swap
+    pull n
+    let n be n minus 1
+    push n
+    call stack::swap
+    return
 
