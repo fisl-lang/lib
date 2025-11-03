@@ -2,6 +2,7 @@
 use stack
 
 
+#(::String) => IO
 label string::print
     call stack::swap    
     pull ptr
@@ -13,5 +14,27 @@ label string::print::loop
     if char unequal 0 goto string::print::loop
 
     return
+
+
+#(::String) => (Len::Int)
+label string::len
+    call stack::swap
+    pull ptr
+
+    let len be 0 minus 1
+
+label string::len::loop
+    read char from ptr
+    let ptr be ptr plus 1
+
+    let len be len plus 1
+    if char unequal 0 goto string::len::loop
+
+    push len
+    call stack::swap
+    return
+    
+    
+    
 
 
