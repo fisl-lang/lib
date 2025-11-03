@@ -4,8 +4,8 @@ use heap
 use math
 
 # link structure
-# p+0 -> Next::Ptr
-# p+1 -> Content::Void
+# +0 -> Next::Ptr
+# +1 -> Content::Void
 
 
 # => (::Lnk)
@@ -100,8 +100,8 @@ label lnk::erase
     pull last
 
     #initial
-    stream link from last
-    stream next from last
+    read link from last
+    read next from link
 
     #relink
     write next into last
