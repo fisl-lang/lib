@@ -1,0 +1,211 @@
+#VIS PRIMA
+#   https://raw.githubusercontent.com/baabnq/ext/refs/heads/main/ringbuf.baabnq
+
+use stack
+use heap
+use flow
+
+
+#ringbuf structure
+# +0 -> Size      ::Int
+# +1 -> Head      ::Ptr
+# +2 -> Tail      ::Ptr
+# +3 -> End       ::Ptr
+# +4 -> Container :: Chunk
+
+#AD VERBUM EX FONTE
+#    "the head pointer tracks writing to the buffer.
+#    "the tail pointer tracks reading from the buffer.
+#    "the end pointer points to the end of container,
+#    "to allow for bounds checking
+
+constant Ringbuf::Size      be 0
+constant Ringbuf::Head      be 1
+constant Ringbuf::Tail      be 2
+constant Ringbuf::End       be 3
+constant Ringbuf::Container be 4
+constant Ringbuf            be 5
+
+
+label ringbuf::allocate
+    push Ringbuf
+    call heap::allocate
+    call stack::swap
+    return
+
+
+#(::Ringbuf, Field::Ptr)
+#"advances field in Ringbuf object,
+#"while performing bounds checks.
+#"this is used to advance head and tail.
+let ring beknown
+let field-ptr beknown
+label ringbuf::advance-ptr::restart
+    read container-base from ring at Ringbuf::Container
+    write container-base into field-ptr
+    return
+        
+label ringbuf::advance-ptr
+    call stack::swap
+    pull field-ptr
+    call stack::swap
+    pull ring
+
+    read field from field-ptr
+    read end from ring at Ringbuf::End
+
+    if field equal end goto ringbuf::advance-ptr::restart
+        let field be field plus 1
+        write field into field-ptr
+        return
+
+
+#(::Ringbuf) => (Container::Chunk)
+label ringbuf::container
+    call stack::swap
+    pull ring
+
+    read container from ring at Ringbuf::Container
+
+    push container
+    call stack::swap
+    return
+
+#(::Ringbuf) => (Size::Int)
+label ringbuf::size
+    call stack::swap
+    pull ring
+
+    read size from ring at Ringbuf::Size
+
+    push size
+    call stack::swap
+    return
+
+#(Capacity::Int) => (::Ringbuf)
+label ringbuf::create
+    call stack::swap
+    pull capacity
+
+    call ringbuf::allocate
+    pull ring
+
+    push capacity
+    call heap::allocate
+    pull container
+
+    let end be container plus capacity
+    let end be end minus 1
+
+    write container into ring at Ringbuf::Container
+    write container into ring at Ringbuf::Head
+    write container into ring at Ringbuf::Tail
+    write end       into ring at Ringbuf::End
+
+    push ring
+    call stack::swap
+    return
+
+
+#(::Ringbuf)
+label ringbuf::delete
+    call stack::swap
+
+    call stack::dup
+    call ringbuf::container
+
+    call heap::free
+    call heap::free
+
+    return
+
+#(::Ringbuf, Value::Int)
+label ringbuf::put
+    call stack::swap
+    pull value
+    call stack::swap
+    pull ring
+
+    read head      from ring at Ringbuf::Head
+    read size      from ring at Ringbuf::Size
+    read container from ring at Ringbuf::Container
+
+    push container
+    call chunk::len
+    pull capacity
+
+    #write fails if buffer is full
+    if size equal capacity goto flow::return
+
+    write value into head
+
+    push ring
+    let field be ring plus Ringbuf::Head
+    push field
+    call ringbuf::advance-ptr
+
+    read size from ring at Ringbuf::Size
+    let size be size plus 1
+    write size into ring at Ringbuf::Size
+
+    return
+
+
+#(::Ringbuf) => (Value::Int)
+label ringbuf::peek
+    call stack::swap
+    pull ring
+
+    read tail from ring at Ringbuf::Tail
+    read size from ring at Ringbuf::Size
+
+    push 0
+    call stack::swap
+    if size equal 0 goto flow::return
+    call stack::swap
+    call stack::drop
+
+    read value from tail
+
+    push value
+    call stack::swap
+    return
+
+
+#(::Ringbuf) => (Value::Int)
+label ringbuf::get
+    call stack::swap
+    pull ring
+
+    read tail from ring at Ringbuf::Tail
+    read size from ring at Ringbuf::Size
+
+    push 0
+    call stack::swap
+    if size equal 0 goto flow::return
+    call stack::swap
+    call stack::drop
+
+    read value from tail
+
+    push ring
+    let field be ring plus Ringbuf::Tail
+    push field
+    call ringbuf::advance-ptr
+
+    let size be size minus 1
+    write size into ring at Ringbuf::Size
+
+    push value
+    call stack::swap
+    return
+
+
+
+        
+    
+
+
+
+
+
