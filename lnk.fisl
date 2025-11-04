@@ -7,10 +7,14 @@ use math
 # +0 -> Next::Ptr
 # +1 -> Content::Void
 
+constant Link::Next     be 0
+constant Link::Content  be 1
+constant Link           be 2
+
 
 # => (::Lnk)
 label lnk::allocate
-    push 2
+    push Link
     call heap::allocate
     call stack::swap
     return
@@ -22,10 +26,9 @@ label lnk::create-data
 
     call lnk::allocate
     call stack::dup
-    call math::inc
-    pull ptr-oo
+    pull ptr
 
-    write content into ptr-oo
+    write content into ptr at Link::Content
 
     call stack::swap
     return
@@ -37,37 +40,6 @@ label lnk::create-data
 label lnk::deallocate
     call stack::swap
     call heap::free
-    return
-
-#(::Lnk) => (::Lnk)
-label lnk::next
-    call stack::swap
-    pull ptr
-    read next from ptr
-    push next
-    call stack::swap
-    return
-
-
-#(::Lnk) => (Content::Void)
-label lnk::get
-    call stack::swap
-    call math::inc
-        pull ptr-oo
-        read content from ptr-oo
-        push content
-    call stack::swap
-    return
-
-#(::Lnk, Content::Void)
-label lnk::set
-    call stack::swap
-        pull content
-    call stack::swap
-    call math::inc
-        pull ptr-oo
-
-        write content into ptr-oo
     return
 
 
@@ -83,11 +55,11 @@ label lnk::insert
     pull link
 
     #initial
-    read next from last
+    read next from last at Link::Next
 
     #relink
-    write link into last
-    write next into link
+    write link into last at Link::Next
+    write next into link at Link::Next
 
     return
 
@@ -100,11 +72,11 @@ label lnk::erase
     pull last
 
     #initial
-    read link from last
-    read next from link
+    read link from last at Link::Next
+    read next from link at Link::Next
 
     #relink
-    write next into last
+    write next into last at Link::Next
 
     #deallocate
     push link
