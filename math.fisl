@@ -4,7 +4,7 @@ use stack
 
 
 #(Factor-Addend::Int, Factor-Count::Int) => (Product::Int)
-    let product be 0
+    let product beknown
     label math::mul::done
         push product
         call stack::swap
@@ -29,7 +29,7 @@ label math::mul
 
 
 #(Numerator::Int, Denominator::Int) => (Quotient::Int)
-    let quotient be 0
+    let quotient beknown
     label math::div::done
         push quotient
         call stack::swap
