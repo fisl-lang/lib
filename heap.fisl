@@ -9,8 +9,8 @@ label heap::init
     return
 
 
-let walker be 0
-let needed be 0
+let walker beknown
+let needed beknown
 
 label heap::alloc::restart
     #skip block
