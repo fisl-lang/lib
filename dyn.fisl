@@ -1,0 +1,115 @@
+
+use heap
+use chunk
+use flow
+
+# dyn structure
+# p+0 -> Size::Int
+# p+1 -> Container::Chunk
+
+# capacity is stored by container
+
+constant Dyn::Size      be 0
+constant Dyn::Container be 1
+constant Dyn            be 2
+
+
+# => (::Dyn)
+label dyn::allocate
+    push Dyn
+    call heap::allocate
+
+    call stack::swap
+    return
+
+
+#(::Dyn)
+label dyn::delete
+    call stack::swap
+
+    call stack::dup
+    pull dyn
+
+    read container from dyn at Dyn::Container
+    push container
+
+    call heap::free
+    call heap::free
+    return
+
+
+#(::Dyn, Capacity::Int)
+label dyn::reserve
+    call stack::swap
+    pull capacity-request
+    call stack::swap
+    pull dyn
+
+    read container-old from dyn at Dyn::Container
+    push container-old
+    call chunk::len
+    pull capacity-status
+
+    #cancel reallocate if request already satisfied
+    if capacity-status greater capacity-request goto flow::return
+    if capacity-status equal   capacity-request goto flow::return
+
+    #allocate new container
+    push capacity-request
+    call heap::allocate
+    pull container-new
+
+    #copy over data
+    push container-old
+    push container-new
+    push capacity-status
+    call mem::cpy
+
+    #free old container
+    push container-old
+    call heap::free
+
+    #inject new container
+    write container-new into dyn at Dyn::Container
+
+    return
+
+
+#(::Dyn, Elem::Void)
+label dyn::push
+    call stack::swap
+    pull elem
+    call stack::swap
+    pull dyn
+
+
+    read size from dyn at Dyn::Size
+        let index be size
+        let size be size plus 1
+    write size into dyn at Dyn::Size
+
+    push dyn
+    push size
+    call dyn::reserve
+
+    read container from dyn at Dyn::Container
+    write elem into container at index
+
+    return
+
+
+
+
+
+
+
+
+    
+    
+
+
+
+    
+
+
+
