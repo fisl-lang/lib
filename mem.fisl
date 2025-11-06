@@ -11,8 +11,6 @@ label mem::cpy
     call stack::swap
     pull src
 
-    let index be 0
-
     label mem::cpy::loop
         let size be size minus 1
 
